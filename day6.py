@@ -1,14 +1,12 @@
 import numpy as np
-timers = [3,4,3,0,2]
+timers = [4,1,1,4,1,1,1,1,1,1,1,1,3,4,1,1,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,5,1,2,1,1,5,3,4,2,1,1,4,1,1,5,1,1,5,5,1,1,5,2,1,4,1,2,1,4,5,4,1,1,1,1,3,1,1,1,4,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,1,2,1,1,1,1,1,1,1,2,4,4,1,1,3,1,3,2,4,3,1,1,1,1,1,2,1,1,1,1,2,5,1,1,1,1,2,1,1,1,1,1,1,1,2,1,1,4,1,5,1,3,1,1,1,1,1,5,1,1,1,3,1,2,1,2,1,3,4,5,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,3,1,1,3,1,1,4,1,1,1,1,1,2,1,1,1,1,3,2,1,1,1,4,2,1,1,1,4,1,1,2,3,1,4,1,5,1,1,1,2,1,5,3,3,3,1,5,3,1,1,1,1,1,1,1,1,4,5,3,1,1,5,1,1,1,4,1,1,5,1,2,3,4,2,1,5,2,1,2,5,1,1,1,1,4,1,2,1,1,1,2,5,1,1,5,1,1,1,3,2,4,1,3,1,1,2,1,5,1,3,4,4,2,2,1,1,1,1,5,1,5,2]
 timers = np.array(timers)
-
-print("Initial state" , timers)
-for days in range(1,19):
+print("Initial state  " , timers)
+for days in range(1,257):
+    zero_indices = list(np.where( timers == 0 ))[0]
     non_zero_indices = list(np.nonzero(timers))[0]
     timers[non_zero_indices] = timers[non_zero_indices] -1 
-    zero_indices = list(np.where( timers == 0 ))[0]
     timers[zero_indices] = 6
-    for i in range(len(zero_indices)):
-        np.append(timers,8)
+    timers = np.insert(timers,len(timers), [8] * len(zero_indices))
     print("After ",days," day: ",timers)            
 print(len(timers))
