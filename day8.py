@@ -1,6 +1,10 @@
 import re
 import numpy as np
 
+def create_number_from_list(list):
+    res = int(list[0]) * 1000 + int(list[1]) * 100 + int(list[2]) * 10 + int(list[3])
+    return res
+
 ZERO = 6
 ONE = 2 
 TWO = 5
@@ -12,7 +16,7 @@ SEVEN = 3
 EIGHT = 7
 NINE = 6
 
-with open("D:/day8.txt") as file:
+with open("D:/day8_2.txt") as file:
     input = file.readlines()
 
 input = [(((x.split("|"))[1]).strip().split(" ")) for x in input]
@@ -32,45 +36,60 @@ result = np.zeros((len(input),4))
 
 for row in range(0,len(input)):
     for column in range(0,4):
-        if len(input[row][column]) == ONE:
+        if len(input[row][column]) == 2 : # this is ONE
             one += 1
             result[row][column] = 1
-        if len(input[row][column]) == FOUR:
+        elif len(input[row][column]) == 4 : # this is FOUR
             four += 1
             result[row][column] = 4
-        if len(input[row][column]) == SEVEN:
+        elif len(input[row][column]) == 3: # this is SEVEN
             seven += 1
             result[row][column] = 7
-        if len(input[row][column]) == EIGHT:
+        elif len(input[row][column]) == 7: # this is EIGHT
             result[row][column] = 8
-        if len(input[row][column]) == TWO:
+        elif len(input[row][column]) == 5 : # this is TWO or THREE or FIVE
             # handle TWO
-            if (re.search('[g][c][d][f][a]',input[row][column]) or re.search('[c][d][g][b][a]',input[row][column])) :
+
+            # match [cdfbe]{5}
+            if (re.search('[bcefd]',input[row][column])): #or re.search('[c][d][g][b][a]',input[row][column])\
+                # or re.search('',input[row][column])) :
                 two += 1
                 result[row][column] = 2
             # handle THREE
-            if (re.search('[f][b][c][a][d]',input[row][column]) or re.search('[f][c][a][d][b]',input[row][column]) 
+            elif (re.search('[f][b][c][a][d]',input[row][column]) or re.search('[f][c][a][d][b]',input[row][column]) 
                 or re.search('[c][d][b][a][f]',input[row][column]) or re.search('[c][e][f][d][b]',input[row][column]) 
                     or re.search('[c][e][d][b][a]',input[row][column]) or re.search('[b][f][g][e][a]',input[row][column])
                         or re.search('[c][f][g][a][b]',input[row][column])) :
                 three += 1
                 result[row][column] = 3
             # handle FIVE
-            if (re.search('[cdb][dcba][fbg][bec][ebf]',input[row][column])) :
+            elif ( re.search('[cbedf]',input[row][column]) or re.search('[cbgef]',input[row][column])
+                or re.search('[bagce]',input[row][column]) ):
                 five += 1
                 result[row][column] = 5
-        if len(input[row][column]) == SIX:
-            # handle ZERO
-            if (re.search('[c][a][g][e][d][b]',input[row][column])) :
+        elif len(input[row][column]) == 6: # this is ZERO or SIX or NINE
+            # handle ZERO ---new
+            if ( ( re.search("[cagedb]{6}",input[row][column]) != None and len((re.search("[cagedb]{6}",input[row][column])).group()) == 6 ) ):
                 zero +=1
-                # result[row][column] = 0
-            # handle SIX
-            if (re.search('[cgb][dac][fdg][gfa][ef][bce]',input[row][column])) :
-                six +=1
-                result[row][column] = 6
-            # handle NINE       
-            if (re.search('[cfe][ecdf][fgca][abe][bgdc][db]',input[row][column])) :
+                result[row][column] = 0
+            # handle SIX ---new
+            if (  ( re.search("[cdfgeb]{6}",input[row][column]) != None and\
+                 re.search("[cdfgea]{6}",input[row][column]) != None and\
+                      re.search("[cbfgea]{6}",input[row][column]) != None ) 
+                and  ( len((re.search("[cdfgeb]{6}",input[row][column])).group()) == 6  or\
+                     len((re.search("[cdfgea]{6}",input[row][column])).group() == 6 ) ) \
+                     or len((re.search("[cbfgea]{6}",input[row][column])).group()) == 6 ) :
+                    six +=1
+                    result[row][column] = 6
+            # handle NINE  ---new 
+            if (  re.search("[cefabd]{6}",input[row][column]) != None and\
+                 ( len((re.search("[cefabd]{6}",input[row][column])).group()) == 6  or len((re.search("[cefgbd]{6}",input[row][column])).group() == 6 ) ) ) :
                 nine +=1
                 result[row][column] = 9
 print(result)
+
+sum = 0
+for rows in range(0,len(result)):
+    sum = sum + create_number_from_list(result[rows])
+print(sum)
         
