@@ -80,4 +80,3 @@ for input_row in range(0 , len(input)):
 # print(invalid_chars)
 scores = complete_list(invalids , invalid_chars)
 scores.sort()
-print(scores)
