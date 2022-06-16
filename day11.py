@@ -1,17 +1,18 @@
 import numpy as np
 
 def do_flash_dumbo(input):
-    for row in range(0,len(input[0])):
-        for column in range(0,len(input)):
-            if( input[row][column] > 9 ):
-                flash_status[row][column] = 0
+    for row in range(0,len(input)):
+        for column in range(0,len(input[0])):
+            if( flash_status[row][column] == 1 ):
+                flash_status[row][column] = 1
                 update_adjacents(input,row,column)
                 input[row][column] = 0
 
+
 def check_dumbo_flash(input):
-    flash_status = np.zeros((len(input),len(input)))
-    for row in range(0,len(input[0])):
-        for column in range(0,len(input)):
+    flash_status = np.zeros((len(input),len(input[0])))
+    for row in range(0,len(input)):
+        for column in range(0,len(input[0])):
             if( input[row][column] >= 9):
                 flash_status[row][column] = 1
                 
@@ -148,7 +149,8 @@ print(input)
 for steps in range(0,MAX_STEPS):
     for row in range(0,len(input)):
         for column in range(0,len(input[0])):
-            input[row][column] +=1
+            if( input[row][column] <9 ):
+                input[row][column] +=1
     check_dumbo_flash(input)
     do_flash_dumbo(input)
     print("after",steps+1,"steps")
