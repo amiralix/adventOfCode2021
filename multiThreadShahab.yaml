@@ -1,0 +1,19 @@
+address:
+  -yaml:
+    cif_ip : '192.168.234.194:9080'
+    sso_ip : '192.168.107.2:9080'
+    SSO_AUTH_URL : 'https://192.168.107.2:9080/oauth2/authorize'
+    SSO_TOKEN_URL : 'https://192.168.107.2:9080/oauth2/token'
+    SSO_CLIENT_ID : 'rayan-icms-client'
+    SSO_CLIENT_SECRET : 'cB1rF1sD3hI8hB5fC5hD3tD1fC5bC6eF1qQ1lB7gF9'
+    SSO_CLIENT_SCOPE : 'civil-registration-inquiry'
+    SSO_GRANT_TYPE : 'client_credentials'
+
+    SSO_AUTH_URL_TEST : 'http://185.135.30.10:9443/oauth2/authorize'
+    SSO_TOKEN_URL_TEST : 'http://185.135.30.10:9443/identity/oauth2/auth/token'
+    SSO_CLIENT_ID_TEST : 'rayan-icms-client'
+    SSO_CLIENT_SECRET_TEST : 'eG2iD2bM4qE4jC3bG3dK5eC1nZ3bD2eM4bH1tP6dN3'
+    SSO_CLIENT_SCOPE_TEST : 'civil-registration-inquiry'
+    SSO_GRANT_TYPE_TEST : 'client_credentials'
+    SSO_REDIRECT_URI : 'https://cif.bmi.ir'
+    SSO_REDIRECT_URI_TEST : 'https://cif.bmi.ir'
