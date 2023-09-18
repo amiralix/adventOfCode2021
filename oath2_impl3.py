@@ -8,21 +8,6 @@ from shahabInquiry3 import *
 # SSO server configuration
 
 class TokenManager3:   
-
-    """ 
-    def __init__(self):
-        with open('multiThreadShahab.yaml') as yamlfile:
-            yamlContent = yaml.safe_load(yamlfile)
-        global  SSO_CLIENT_ID_TEST , SSO_CLIENT_SECRET_TEST , SSO_TOKEN_URL_TEST,SSO_GRANT_TYPE_TEST,SSO_CLIENT_SCOPE_TEST
-        SSO_TOKEN_URL_TEST = yamlContent['address']['-yaml']['SSO_CLIENT_SECRET_TEST']
-        SSO_CLIENT_SECRET_TEST = yamlContent['address']['-yaml']['SSO_CLIENT_SECRET_TEST']
-        SSO_CLIENT_ID_TEST = yamlContent['address']['-yaml']['SSO_CLIENT_ID_TEST']
-        SSO_GRANT_TYPE_TEST = yamlContent['address']['-yaml']['SSO_GRANT_TYPE_TEST']
-        SSO_CLIENT_SCOPE_TEST = yamlContent['address']['-yaml']['SSO_CLIENT_SCOPE_TEST']
-
-        self.token = self.get_token()
-        self.token_timestamp = time.time()
-    """ 
     token = ''  
     def __init__(self):
         self.token = self.getToken()
@@ -80,6 +65,7 @@ class TokenManager3:
 
     def call_service(self , natCode ,bdate , shenasnameNo, inquiryType,access_token):
         shahabInquiry3.inquiry4Items(natCode ,bdate , shenasnameNo,inquiryType,access_token=access_token)    
+        
 
 
 
