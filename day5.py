@@ -4,14 +4,14 @@ MAX_ITEM = 1000
 
 def find_overlaps(input):
     sum = 0
-    for row in range(0,MAX_ITEM):
+    for row in range(0 , MAX_ITEM):
         for column in range(0,MAX_ITEM):
             if input[row][column] >= 2 :
                 sum +=1
     return sum
 
 def check_vertical(x1,y1,x2,y2):
-    if ( abs(x2-x1) == abs(y2-y1)): # secondary diagonal
+    if ( abs(x2-x1 ) == abs(y2-y1)): # secondary diagonal
         return 1
     if ( x1 == y1 and x2 == y2 ): # main diagonal
         return 0

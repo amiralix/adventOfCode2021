@@ -3,12 +3,8 @@ from persiantools.jdatetime import JalaliDate
 from colorama import Fore, Back, Style
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
-import threading 
 
 class shahabInquiry3:
-    def __init__(self) -> None:
-        pass
-
     def inquiryInMemory(self):
         headers = {'Content-Type': 'application/json','Authorization':f'bearer {self.token}'}     
         dataOnline={"nationalCode":self.natCode,"birthDate":self.bDate,"issueNumber":str(self.shenasnameNo),"online":"true"}
@@ -27,35 +23,63 @@ class shahabInquiry3:
         except Exception as myEX:
             print(myEX)
 
-    def inquiry4Items(natCode, bdate, shenasnameNo, inquiryType, access_token):
-        
+    def inquiry4Items(self,natCode, bdate, shenasnameNo, inquiryType, access_token):
         try:   
-            #api_url = 'http://192.168.239.230:9082/api/icms/v1/iranian/individual/shahab/inquiry'
-            api_url  =  'http://192.168.239.231:9081/api/nahab/v1/iranian/individual/shahab/inquiry'
+            api_url_icms = 'http://192.168.34.59:9086/api/icms/v1/iranian/individual/shahab/inquiry'
+            #api_url  =  'http://192.168.239.231:9080/api/nahab/v1/iranian/individual/shahab/inquiry'
+            #api_url  =  'http://192.168.34.57:9090/api/nahab/v1/iranian/individual/shahab/inquiry' #LB nahab core
             headers = {'Content-Type': 'application/json','Authorization':f'Bearer {access_token}'}     
             data={"postalCode":"","callerUnitCode":"rayan-icms-client","branchCode":"1031",
-                            "userIdentificationNo":"0011001100","nationalCode":natCode,"birthDate":bdate,
-                                    "issueNumber":int(float(shenasnameNo)),"online":inquiryType}
-            response = requests.post(api_url ,headers=headers ,json=data, verify=False , timeout=30)
-            print(response , threading.get_native_id())
-            global lock 
-            lock = threading.Lock()
-            lock.acquire()
-            with open('D:/multiThread.txt', 'a') as file:
-                file.write(response)
-                file.close()
-            lock.release()
+                           "userIdentificationNo":"0011001100","nationalCode":natCode,"birthDate":bdate,
+                                  "issueNumber":int(float(shenasnameNo)),"online":inquiryType}
+            data2={"postalCode":"","nationalCode":natCode,"birthDate":bdate,
+                                   "issueNumber":int(float(shenasnameNo)),"online":inquiryType}
+            response = requests.post(api_url_icms ,headers=headers ,json=data2, verify=False , timeout=5)
+            print(response.status_code ,f'for {natCode}' )
             return response
         except ConnectionError as myEX:
             print(myEX)
             exit(1)
+            
+            
+    def inquiryIraninanLegal(natCode, bdate, regNo, inquiryType, access_token):
+        try:   
+            api_url_icms = 'http://192.168.234.194:9080/api/icms/v1/iranian/legal/shahab/inquiry'
+            headers = {'Content-Type': 'application/json','Authorization':f'Bearer {access_token}'}     
+            data2={"postalCode":"","nationalId":natCode,"registerDate":bdate,
+                                   "registerNumber":int(float(regNo)),"online":inquiryType}
+            response = requests.post(api_url_icms ,headers=headers ,json=data2, verify=False , timeout=30)
+            print(response.status_code , response.json())
+            return response
+        except ConnectionError as myEX:
+            print(myEX)
+            exit(1)
+
+    def inquiryForeignReal(self,foreignNationalCode, identificationDocumentNumber, birthCounrtyId,birthDate, inquiryType, access_token):
+        try:   
+            api_url_icms = 'http://customer.bmiapis.ir/api/icms/v1/foreign/individual/shahab/inquiry'
+            headers = {'Content-Type': 'application/json','Authorization':f'Bearer {access_token}'}     
+            data2={"postalCode":"","foreignNationalCode":foreignNationalCode,"birthDate":birthDate,"birthCounrtyId":int(birthCounrtyId),
+                                   "identificationDocumentNumber":identificationDocumentNumber,"online":inquiryType}
+            response = requests.post(api_url_icms ,headers=headers ,json=data2, verify=False , timeout=30)
+            return response
+        except ConnectionError as myEX:
+            print("wexce")
+            print(myEX )
+            exit(1)
+
     
     
     '''
             if response.status_code == 200:
                 #print(Fore.WHITE ,f'ok {natCode}\n')#by {threading.current_thread().name}')
                 #print(response)
-                return response.status_code, response.json()
+                return response.status_code, # The `ignReal` function is a method that is being called
+                # from the `shahabInquiry3` module. It is used to perform
+                # an inquiry for a foreign real person using their
+                # national code, identification document number, birth
+                # country ID, birth date, inquiry type, and access token.
+                response.json()
             else: 
                 #error_message = (json.loads(response.content))['error']
                 #print(Fore.RED ,f'NOK for {natCode} because of {response.status_code} and {error_message}')# by {threading.get_native_id()} because of {response.status_code}')
@@ -142,4 +166,3 @@ class shahabInquiry3:
                         print(f'{nationalCode};{response.status_code};{response.content}\n')
     """  
         
-    

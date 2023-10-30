@@ -1,9 +1,10 @@
+from distutils.file_util import write_file
 import requests
-import threading
 from persiantools.jdatetime import JalaliDate
 from colorama import Fore, Back, Style
 
 class shahabInquiry:
+     
     def __init__(self) -> None:
         pass
 
@@ -26,15 +27,37 @@ class shahabInquiry:
 
     def inquiry4Items(natCode, bdate, shenasnameNo, inquiryType, access_token):
         try:   
-            #api_url = 'http://192.168.234.194:9080/api/icms/v1/iranian/individual/shahab/inquiry'
-            api_url =  'http://192.168.34.37:9033/api/nahab/v1/iranian/individual/shahab/inquiry'
+            api_url = 'http://192.168.234.194:9080/api/icms/v1/iranian/individual/shahab/inquiry'
+            #api_url =  'http://192.168.239.231:9081/api/nahab/v1/iranian/individual/shahab/inquiry'
+            headers = {'Content-Type': 'application/json','Authorization':f'Bearer {access_token}'}     
+            #data={"postalCode":"","callerUnitCode":"rayan-icms-client","branchCode":"1031",
+            #           "userIdentificationNo":"0011001100","nationalCode":natCode,"birthDate":bdate,
+            #                   "issueNumber":int(float(shenasnameNo)),"online":inquiryType}
+            data={"nationalCode":natCode,"birthDate":bdate,"issueNumber":int(float(shenasnameNo)),"online":inquiryType}
+            #print(data)
+            response = requests.post(api_url ,headers=headers ,json=data, verify=False , timeout=50)
+            if response.status_code == 200:
+                print(Fore.WHITE ,f'SHAHAB ok {natCode}')#by {threading.current_thread().name}')
+                #print(response)
+                return response.status_code, response.json()
+            else: 
+                #print(Fore.RED , f'SHAHAB for natcode {natCode} failed for {response.status_code} ' )
+                print(Fore.RED ,f'SHAHAB NOK for {natCode}')# by {threading.get_native_id()} because of {response.status_code}')
+                print(response.json())
+                return response.status_code, response.json()
+        except :
+            print(f"exception occured in calling ")
+      
+    def inquiry4ItemsByUrl(self,urlAddress , natCode, bdate, shenasnameNo, inquiryType, access_token):
+        try:   
             headers = {'Content-Type': 'application/json','Authorization':f'Bearer {access_token}'}     
             data={"postalCode":"","callerUnitCode":"rayan-icms-client","branchCode":"1031",
                         "userIdentificationNo":"0011001100","nationalCode":natCode,"birthDate":bdate,
                                 "issueNumber":int(float(shenasnameNo)),"online":inquiryType}
             #data={"nationalCode":natCode,"birthDate":bdate,"issueNumber":int(float(shenasnameNo)),"online":inquiryType}
             #print(data)
-            response = requests.post(api_url ,headers=headers ,json=data, verify=False , timeout=50)
+            response = requests.post(url=urlAddress ,headers=headers ,json=data, verify=False , timeout=35) # type: ignore
+            jsonResponse = response.json()
             if response.status_code == 200:
                 print(Fore.WHITE ,f'ok {natCode}')#by {threading.current_thread().name}')
                 #print(response)
@@ -42,11 +65,15 @@ class shahabInquiry:
             else: 
                 #print(Fore.RED , f'SHAHAB for natcode {natCode} failed for {response.status_code} ' )
                 print(Fore.RED ,f'NOK for {natCode}')# by {threading.get_native_id()} because of {response.status_code}')
-                #print(response)
-                return response.status_code, response.json()
-        except :
-            print(f"exception occured in calling ")
+                print(response.json())
+            return response.status_code, response.json()
+        except Exception as ex:
+            print(f"exception occured in calling {ex}")
+
+
+            
       
+
     '''
     def inquiryFida(fidaCode ,idNumber , birthdate , birthCountry , inquiryType):
             api_url = 'http://192.168.34.176:32321/api/icms/v1/foreign/individual/shahab/inquiry'
